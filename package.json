@@ -19,7 +19,12 @@
   },
   "homepage": "https://github.com/saifbeiruty/Solo-Project#readme",
   "dependencies": {
-    "express": "^4.18.1"
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "mongoose": "^6.3.8"
   },
   "devDependencies": {
     "nodemon": "^2.0.16"
