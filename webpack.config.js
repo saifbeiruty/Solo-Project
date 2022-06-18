@@ -3,12 +3,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'development',
-    entry: {
-
-    },
+    devtool: 'none', // this removes the eval part in the file that webpack spits for us. This is not necessary 
+    entry: './',
     output: {
-        filename: '',
-        path: path.resolve(__dirname, '')
+        filename: 'main.js', //name of file that it spits out (This file has our compiled code)
+        path: path.resolve(__dirname, 'dist') // name of folder to put the file in. If folder name does not exist, it creates a new folder
     },
     module: {
         rules: [
@@ -24,7 +23,11 @@ module.exports = {
             },
             {
                 test: /\.s[ac]ss$/i,
-                use: ["style-loader","css-loader","sass-loader"],
+                use: [
+                "style-loader", // Inject styles into the DOM
+                "css-loader", //turns css to commonjs
+                "sass-loader" // turns sass to css
+            ],
             },
         ],
     },
