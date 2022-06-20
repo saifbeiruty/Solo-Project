@@ -22,6 +22,11 @@ module.exports = {
             }
             },
             {
+                test: /\.js$/,
+                enforce: 'pre',
+                use: ['source-map-loader'],
+            },
+            {
                 test: /\.scss$/,
                 use: [
                 "style-loader", // Inject styles into the DOM
@@ -32,12 +37,13 @@ module.exports = {
         ],
     },
     devServer: {
-        historyApiFallback: true,
+        // historyApiFallback: true,
         static: {
         directory: path.join(__dirname, 'dist/bundledMain.js'),
         },
         compress: true,
         port: 8080,
+        host: 'localhost',
         hot: true,
       },
     plugins: [new HtmlWebpackPlugin({

@@ -2,10 +2,11 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const app = express();
 const bcrypt = require('bcrypt');
-const userData = require('./UserModel');
+const userData = require('./server/UserModel');
 const cors = require('cors')
 const mongoose = require('mongoose');
 const PORT= 3000;
+const path = require('path')
 // require dotenv?
 
 const uri = 'mongodb+srv://saifbeiruty:saifbeiruty@cluster1.qbxan.mongodb.net/?retryWrites=true&w=majority'
@@ -15,32 +16,29 @@ mongoose.connection.once('open', () => {
 });
 
 app.use(cors())
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.json());
 
 app.get("/", (req,res) => {
-    res.send('Hi :)')
+    res.send('Hi')
 })
 
-
-
-app.post("/signup", async (req,res) => {
+app.post("/signup", async (req, res) => {
     try {
-        const { username, password } = req.body
-        if(username !== "" || password !== "" ) {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            let user = { name: username, password: hashedPassword };
-            const information = await userData.create(user); 
-            console.log(information)
-            res.redirect('/login')
-        } else {
-            res.json({ bad: 'bad' })
-        }
-    } catch {
-        res.sendStatus(404);
+    const { username, password } = req.body
+    if(username !== "" && password !== "" ) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        let user = { name: username, password: hashedPassword };
+        const information = await userData.create(user); 
+        res.send('works')
+    } else {
+        res.send('Required Information was not provided')
     }
-});
+    } catch(e) {
+        res.send('Nooo')
+    }
+})
 
 app.post('/login', async (req,res) => {
     const { username, password } = req.body
@@ -73,4 +71,4 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
     console.log(`Listening on Port ${PORT}`)
-})
+});
