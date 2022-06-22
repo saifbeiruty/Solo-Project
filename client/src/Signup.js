@@ -31,7 +31,7 @@ const Signup = () => {
             }
           })
           .catch(function (error) {
-            console.log(error);
+            console.log('no');
           });
 
     }

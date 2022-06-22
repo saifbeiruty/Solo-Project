@@ -2,7 +2,8 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const app = express();
 const bcrypt = require('bcrypt');
-const userData = require('./server/UserModel');
+const userData2 = require('./server/UserModel');
+const stockData = require('./server/StockModel');
 const cors = require('cors')
 const mongoose = require('mongoose');
 const PORT= 3000;
@@ -29,27 +30,47 @@ app.post("/signup", async (req, res) => {
     const { username, password } = req.body
     if(username !== "" && password !== "" ) {
         const hashedPassword = await bcrypt.hash(password, 10);
-        let user = { name: username, password: hashedPassword };
-        const information = await userData.create(user); 
+        let user = { name: username, password: hashedPassword};
+        const information = await userData2.create(user); 
+//        res.cookie('username', username)
         res.send('works')
     } else {
         res.send('Required Information was not provided')
     }
     } catch(e) {
-        res.send('Nooo')
+        res.send(e)
     }
 })
 
+app.post('/stocks', async (req, res) => {
+    try {
+        const { stock, data } = req.body
+        let stocks = { stockNames: stock, stockData: data}
+        const dataInformation = await userData2.findOneAndUpdate({ name: 'saif' }, stocks)
+        //console.log(stocks)
+        res.send('Stockssss')
+    } catch(e) {
+        next(e)
+    }
+})
+
+app.get('/ticker', async (req, res) => {
+    const { cookieUser } = req.body
+    const stockDatas = await userData2.find( { name: cookieUser } )
+    res.json(stockDatas[0])
+    console.log(stockDatas[0])
+})
+
 app.post('/login', async (req,res) => {
-    const { username, password } = req.body
-    const user = await userData.find({ name: username })
-    console.log(user.password)
+    const { userInfoName, userInfoPass } = req.body
+    const user = await userData2.find({ name: userInfoName })
+    console.log(user)
     if(user.length===0) {
         res.send('Unable to find user')      
     }
     try {
-       if (await bcrypt.compare(password, user[0].password)) {
-           res.redirect
+       if (await bcrypt.compare(userInfoPass, user[0].password)) {
+           res.cookie('username', userInfoName)
            res.send('Success')
        } else {
            res.send('Access Denied')
